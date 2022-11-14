@@ -35,32 +35,49 @@ def clients():
 @click.pass_context # Pasamos el contexto.
 def create(ctx, name, company, email, position):
     """
-    Crear y registr un nuevo cliente:
+    Crear y registro un nuevo cliente:
     name    : Nombre del cliente.
     company : Nombre de la compañia.  
     email   : Email de cliente.
     position: Posición en la compañía del cliente.
     
     """
+    # Instanciamos las clase ClientService del modulo services.py y pasamos como parametro el objeto contexto
+    # el cual hacer referencia a nuestro archivo tipo .csv:
     client_service = ClientService(ctx.obj['clients_table'])
+    # Instanciamos las clase Client del modulo models.py y pasamos los argumentos opcionales,
+    # creando un nuevo objeto de la clase Client:
     client = Client(name, company, email, position)
 
-    # Instanciamos el metodo del modulo service.py:
+    # Instanciamos el metodo del modulo service.py, colo cual crearemos y 
+    # guardaremos el cliente en nuestro archivo tipo .csv:
     client_service.create_client(client)
 
-'''
-from tabulate import tabulate
 
+# ------------- Comando LIST ------------- #     
+# Importamos el modulo tabulate, que permite imprimir en la salida estándar o escribir
+# en un archivo de texto tablas con datos tabulados con varios formatos conocidos.  
+from tabulate import tabulate
 @clients.command()
 @click.pass_context
 def list(ctx):
-    """List all clients"""
+    """Lista de todos los clientes"""
+    # Instanciamos las clase ClientService del modulo services.py y pasamos como parametro el objeto contexto
+    # el cual hacer referencia a nuestro archivo tipo .csv:
     client_service = ClientService(ctx.obj['clients_table'])
+    
+    # Despues dentro de una variable aplicamos el método list_clients() de la clase ClientService
+    # para obtener la lista de los clientes dentro de nuestro archivos tipo .csv:
     clients_list = client_service.list_clients()
-
+    
+    # Para utilizar un formato del modulo tabulates;
+    # Creamos las siguientes variables:
+    #   headers : Aplica el método .capitalize() a nuestra clase Client() el método .schema(), que nos retorna los headers del schema.
+    #   tables  : Guarda la iteración de los atributos de cada elemento de la variable client_list, después de la iteración.
     headers = [field.capitalize() for field in Client.schema()]
     table = []
-
+    
+    # Iteración y almacenaje de los datos de cada cliente en la variable tipo lista table:
     for client in clients_list:
         table.append(
             [client['name'],
@@ -68,49 +85,21 @@ def list(ctx):
              client['email'],
              client['position'],
              client['uid']])
-
+    
+    # Por ultimo utilizamos el método tabulate del modulo tabulate para imprimir los datos:
     print(tabulate(table, headers))
-'''
-# COMANDO: LIST
-@clients.command()
-@click.pass_context
-def list(ctx):
-    """List all clients
-    Mejorar despues la interfaz."""
-    # Guardamos en una variable el objeto ctx 'archivo.csv'
-    client_service = ClientService(ctx.obj['clients_table'])
-
-    # Instanciamos el método de la clase del modulo services.
-    # Que nos regresa una lista del objeto: PENSAR EN CAMBIAR EL NOMBRE A > CLIENTS_LIST
-    clients = client_service.list_clients()
-
-    # click.echo('ID  |  Name  |  Company  |  Email  |  Position')
-    # click.echo('-' * 100)
-    #for client in clients:
-    #    click.echo(f"{client['uid']} | {client['name']} | {client['email']} | {client['position']}")
-
-   
-    headers = [field.capitalize() for field in Client.schema()]
-    table = []
-
-    for client in clients:
-        table.append(
-            [client['name'],
-             client['company'],
-             client['email'],
-             client['position'],
-             client['uid']])
-
-    print(tabulate(table, headers))
-
     
 
+# ------------- Comando UPDATE ------------- #    
 @clients.command()
+# Solicitamos posterior al comento UPDATE un cliens_uid para actualizarlo.
 @click.argument('client_uid', type=str)
+
 @click.pass_context
 def update(ctx, client_uid):
-    """Updates a single client"""
-
+    """Actualización de un unico cliente:
+       Proporcione despues del UPDATE el client_uid, para actualizarlo.
+       """
     # Guardamos en una variable el objeto ctx 'archivo.csv'
     client_service = ClientService(ctx.obj['clients_table'])
 
@@ -118,18 +107,23 @@ def update(ctx, client_uid):
     # Que nos regresa una lista del objeto:
     clients = client_service.list_clients()
 
-    # Busca los datos de cliente List comperhersion:
+    # Busca los datos de cliente usando un List comperhersion:
     client = [client for client in client_service.list_clients() if client['uid'] == client_uid]
 
     if client:
+        # Uso de la función auxiliar _update_client_flow():
         client = _update_client_flow(Client(**client[0]))
+        # Uso del método update_client() de la clase ClientService():
         client_service.update_client(client)
-
         click.echo('Client updated')
     else:
         click.echo('Client not found')
 
 def _update_client_flow(client):
+    '''
+    Función auxiliar para la actualización de clientes, en caso de no queder actualizar un dato,
+    unicamente dejar en blanco y continuar.
+    '''
     #click.echo('Leave empty if you don\'t want to modify a value')
 
     client.name = click.prompt('New name', type=str, default=client.name)
@@ -139,12 +133,15 @@ def _update_client_flow(client):
 
     return client
 
+
+# ------------- Comando UPDATE ------------- #    
 # COMANDO: DELETE
 @clients.command()
+# Solicitamos posterior al comento UPDATE un cliens_uid para actualizarlo (En este caso Borrarlo).
 @click.argument('client_uid', type=str)
 @click.pass_context
 def delete(ctx, client_uid):
-    """Deletes a client"""
+    """Borra a clientes de nuestro archivo de almacenaje tipo .csv"""
     client_service = ClientService(ctx.obj['clients_table'])
 
     # Instanciamos el método de la clase del modulo services.
@@ -154,10 +151,9 @@ def delete(ctx, client_uid):
     # Genero una lista que actualizada sin el id del cliente a eliminar:
     clients_wd = [client for client in client_service.list_clients() if client['uid'] != client_uid]
     print(clients_wd)
+    # Utilizamos el método privado _save_to_disk() de la clase ClientService():
     client_service._save_to_disk(clients_wd)
-
-
-    #if click.confirm(f"Are you sure you want to delete the client with uid: {client_uid}"):
+   #if click.confirm(f"Are you sure you want to delete the client with uid: {client_uid}"):
     #   client_service.update_client(client_uid)
 
 all = clients
