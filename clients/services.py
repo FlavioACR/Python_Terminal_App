@@ -66,8 +66,7 @@ class ClientService:
         # Guardar información:
         self._save_to_disk(updated_clients)    
 
-    # Para guardar la lista actualizada en el disco utilizamos 
-    # el método privado _save_to_disk()
+
     def _save_to_disk(self, clients):
         '''
         Método privado, función auxiliar del método update_client, crea una tabla temporal 
