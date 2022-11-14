@@ -12,12 +12,13 @@ class Client:
 
   def __init__(self, name, company, email, position, uid=None):
     '''
-    Método constructor solcita los siguientes parametros para poder generar una instancia de la clase:
-    name    : Nombre del cliente.
-    company : Nombre de la compañia.  
-    email   : Email de cliente.
-    position: Posición en la compañía del cliente.
-    uid     : Si no se entraga este parametro se generá por default, un id unico.
+    Método constructor.
+    Parametros:
+      name    : Nombre del cliente.
+      company : Nombre de la compañia.  
+      email   : Email de cliente.
+      position: Posición en la compañía del cliente.
+      uid     : Si no se entraga este parametro se generá por default, un id unico.
     '''
     self.name = name
     self.company = company
