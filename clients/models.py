@@ -26,8 +26,10 @@ class Client:
     # Si lo tenemos bien si no usamos el modulo uid de python:
     self.uid = uid or uuid.uuid4()
 
-  # Permite acceder a una representación del diccionario como objeto:
   def to_dict(self):
+    '''
+    Permite acceder a una representación del diccionario como objeto:
+    '''
     return vars(self)
 
   # Permite declarar metodos estaticos dentro de una clase:
