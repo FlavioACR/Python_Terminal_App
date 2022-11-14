@@ -14,9 +14,11 @@ from tabulate import tabulate
 #    convierte a la función donde se aplique en un decorador más y pasarlo como decorador a las funciones que 
 #    se convertiran en parte del grupo 'clients': 
 @click.group()
-# 2. Definimos una función llamada clientas para crear un grupo de funciones que se ejecutarán dependiendo de los comandos:
+# 2. Definimos una función llamada clients para crear un grupo de funciones que se ejecutarán dependiendo de los comandos:
 def clients():
-    '''Grupo de funciones que administra el ciclo de vida de los clientes'''
+    '''
+    Grupo de funciones que administra el ciclo de vida de los clientes dentro de nuestro archivo de almacenaje 'clients.csv'.
+    '''
     pass
 
 # ------------- Comando CREATE ------------- # 
@@ -35,12 +37,12 @@ def clients():
 @click.pass_context # Pasamos el contexto.
 def create(ctx, name, company, email, position):
     """
-    Crear y registro un nuevo cliente:
-    name    : Nombre del cliente.
-    company : Nombre de la compañia.  
-    email   : Email de cliente.
-    position: Posición en la compañía del cliente.
-    
+    Crea y registra un nuevo cliente:
+    Parametros:
+        name    : Nombre del cliente.
+        company : Nombre de la compañia.  
+        email   : Email de cliente.
+        position: Posición en la compañía del cliente.
     """
     # Instanciamos las clase ClientService del modulo services.py y pasamos como parametro el objeto contexto
     # el cual hacer referencia a nuestro archivo tipo .csv:
@@ -61,7 +63,9 @@ from tabulate import tabulate
 @clients.command()
 @click.pass_context
 def list(ctx):
-    """Lista de todos los clientes"""
+    """
+    Lista de todos los clientes
+    """
     # Instanciamos las clase ClientService del modulo services.py y pasamos como parametro el objeto contexto
     # el cual hacer referencia a nuestro archivo tipo .csv:
     client_service = ClientService(ctx.obj['clients_table'])
@@ -97,9 +101,11 @@ def list(ctx):
 
 @click.pass_context
 def update(ctx, client_uid):
-    """Actualización de un unico cliente:
-       Proporcione despues del UPDATE el client_uid, para actualizarlo.
-       """
+    """
+    Actualización de un unico cliente.
+    Parametros:
+        client_uid : ID del clienta a actualizar.
+    """
     # Guardamos en una variable el objeto ctx 'archivo.csv'
     client_service = ClientService(ctx.obj['clients_table'])
 
@@ -123,6 +129,9 @@ def _update_client_flow(client):
     '''
     Función auxiliar para la actualización de clientes, en caso de no queder actualizar un dato,
     unicamente dejar en blanco y continuar.
+    
+    Parametros:
+        client : Cliente para actualizar.
     '''
     #click.echo('Leave empty if you don\'t want to modify a value')
 
@@ -141,7 +150,12 @@ def _update_client_flow(client):
 @click.argument('client_uid', type=str)
 @click.pass_context
 def delete(ctx, client_uid):
-    """Borra a clientes de nuestro archivo de almacenaje tipo .csv"""
+    """
+    Borra a clientes de nuestro archivo de almacenaje tipo .csv
+    Parametros:
+        client : Cliente para borrar.
+    """
+    # Guardamos en una variable el objeto ctx 'archivo.csv'
     client_service = ClientService(ctx.obj['clients_table'])
 
     # Instanciamos el método de la clase del modulo services.
