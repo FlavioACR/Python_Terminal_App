@@ -13,4 +13,4 @@ This application manages Create, Read, Update & Delete, the information through 
 * virtualenv: To create the virtual environment
 * pip       : To install necessary modules.
 
-### The entire application was developed within a virtual environment, using virtualenv python´s module.
+### The entire application was developed within a virtual environment, using virtualenv python´s module & the Gitbash terminal with WSL (Windows Subsystem Linux)
