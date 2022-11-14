@@ -14,9 +14,9 @@ CLIENTS_TABLE = 'clients.csv'
 # 2. Definimos la función "cli", que será nuestro punto de entrada.
 def cli(ctx):
   '''
-  Una aplicación para Crear, Leer, Actualizar & Borrar un archivo .csv de clientes
-    ctx.obj : Objeto 'ctx' vacio.
-    Valores del objeto ctx.obj:
+  Una aplicación para Crear, Leer, Actualizar & Borrar un archivo .csv de clientes.
+  Parametros : 
+    ctx      : Objeto contexto, que guardara nuestro objeto de trabajo en este caso un archivo .csv.
   '''
   # 5. Inicializamos el objeto contexto como un diccionario vacio:
   ctx.obj = {}
