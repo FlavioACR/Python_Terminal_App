@@ -1,5 +1,6 @@
 # ------------- OBJETO MODELO CLASE PRINCIPAL ------------- #
 
+# Librerías y modulos:
 # Importamos el módulo uuid implementa identificadores universalmente únicos:
 import uuid
 
